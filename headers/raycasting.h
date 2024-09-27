@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:00:14 by simarcha          #+#    #+#             */
-/*   Updated: 2024/09/25 19:38:56 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/09/27 19:18:31 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 
 # define PROJECTION_PLANE_X 320
 # define PROJECTION_PLANE_Y 200
+
+typedef struct s_grid
+{
+	double	x;
+	double	y;
+}	t_grid;
 
 typedef struct raycasting
 {
@@ -43,6 +49,8 @@ typedef struct raycasting
 
 //raycasting_utils.c
 double		rounded_down(double position);
+t_grid		convert_pixel_to_grid(t_grid point);
+
 
 
 #endif
