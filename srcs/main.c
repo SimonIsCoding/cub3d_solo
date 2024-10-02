@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:24:48 by pde-masc          #+#    #+#             */
-/*   Updated: 2024/09/24 17:54:18 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/09/29 17:35:09 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 int	main(int argc, char **argv)
 {
 	t_vars		vars;
-	//int			fd;
+	t_game		*game;
 
-	check_args(argc, argv);
-	//fd = open(argv[1], O_RDONLY);
+	game = parse(argc, argv);
+	(void)game;
 	vars.mlx_ptr = mlx_init();
 	if (!vars.mlx_ptr)
 		return (EXIT_FAILURE);
