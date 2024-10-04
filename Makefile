@@ -1,14 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/19 11:50:04 by pde-masc          #+#    #+#              #
-#    Updated: 2024/09/30 19:51:24 by simarcha         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 BROWN =     \033[38;2;184;143;29m
 ORANGE =    \033[38;5;209m
@@ -40,7 +29,7 @@ LIBFT_HEADER = $(LIBFT_DIR)/libft.h
 
 HEADER = $(wildcard ./headers/*.h) $(LIBFT_HEADER)
 
-SRCS_DIR = raycasting
+SRCS_DIR = srcs
 OBJS_DIR = objs/
 
 SRCS = $(shell find $(SRCS_DIR) -name "*.c")
