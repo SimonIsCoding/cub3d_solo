@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:47:35 by simarcha          #+#    #+#             */
-/*   Updated: 2024/10/08 18:21:30 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:21:58 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,11 @@ double	rounded_nearest_nb(double nb)
 
 t_block	convert_pixel_to_block(t_block point)
 {
-	t_block	result;
+	t_block	converted;
 
-	result.x = point.x / BLOCK_SIZE;
-	result.y = point.y / BLOCK_SIZE;
-	//printf("result.x = %f\nresult.y = %f\n", result.x, result.y);
-	return (result);
+	converted.x = point.x / BLOCK_SIZE;
+	converted.y = point.y / BLOCK_SIZE;
+	return (converted);
 }
 
 //we need a function to know if the ray is facing up or down
@@ -89,9 +88,25 @@ t_block	convert_pixel_to_block(t_block point)
 //how to know if the angle is facing up ?
 //We start from the abscissa axis and we go anticlockwise.
 //We know that is facing up if the angle goes from 0° ≤ angle < 180 (% 360)
-int	ray_facing_up(t_ray *ray)
+int	ray_facing_up(double angle)
 {
-	if (ray->angle >= 0 && ray->angle < 180)
+
+	if (angle >= 0 && angle < 180)
+		return (1);
+	else
+		return (0);
+}
+
+//we need thee function to know if the ray is facing right or left
+//this function returns 1 if is going right, 0 if it's going left
+//how to know if the angle is facing right ?
+//We start from the abscissa axis and we go anticlockwise.
+//Basically, we know that angle is facing right if the angle goes from 
+//-90° ≤ angle ≤ 90 (everything % 360)
+int	ray_facing_right(double angle)
+{
+	if ((angle >= 0 && angle < 90)
+		|| (angle >= 270 && angle < 360))
 		return (1);
 	else
 		return (0);
