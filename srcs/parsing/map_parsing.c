@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 17:55:54 by pde-masc          #+#    #+#             */
-/*   Updated: 2024/10/09 19:49:14 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:36:54 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,27 @@ int	is_valid_element(char c)
 int	is_direction(char c)
 {
 	return (c == 'N' || c == 'S' || c == 'W' || c == 'E');
+}
+
+/*
+returns the direction's corresponding angle in degrees
+*/
+void	init_player_angles(t_player *player, char direction)
+{
+	if (direction == 'N')
+		player->angle = 90;
+	else if (direction == 'W')
+		player->angle = 180;
+	else if (direction == 'S')
+		player->angle = 270;
+	else
+		player->angle = 0;
+	player->angle_start = player->angle + 30;
+	player->angle_end = player->angle - 30;
+	if (player->angle_end < 0)
+		player->angle_end += 360;
+	player->middle_angle = player->angle;
+	player->subsequent_angle = 60.0 / 320.0;
 }
 
 /*
@@ -67,7 +88,7 @@ void	check_row(char *row, t_game *game)
 				handle_error(game, "Error\nMalloc Error\n");
 			game->player->pos_x = i;
 			game->player->pos_y = game->n_rows;
-			game->player->direction = row[i];
+			init_player_angles(game->player, row[i]);
 		}
 		++i;
 	}

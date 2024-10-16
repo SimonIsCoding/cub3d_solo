@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:34:01 by simarcha          #+#    #+#             */
-/*   Updated: 2024/10/10 12:33:17 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:03:23 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	check_horizontal_angle_value(t_player *ray)
 {
 	int	rest;
 
-	rest = (int)rounded_nearest_nb(ray->angle) % 180;
+	rest = (int)rounded_nearest_nb(ray->angle) % 360;
 	if (rest == 180)
 		ray->angle = 181;
 	else if (rest == 0)
@@ -47,11 +47,18 @@ void	check_vertical_angle_value(t_player *ray)
 //x || y < 0
 //x > x_max || y > y_max
 //if map[x][y] is different from 0 || 1
-
-int	check_coordinates_in_map(t_vars *vars, t_block current)
+int	check_coordinates_in_map(t_vars *vars, t_block current_point)
 {
-	if (current.y < 0 || current.y > vars->game->n_rows
-		|| current.x < 0 || current.x > vars->game->n_cols)
+	// t_block	current_in_block;
+	t_block	max_vision;
+
+	// printf("check_coordinates_in_map\n");
+	// printf("current_point.x = %f\n", current_point.x);
+	// printf("current_point.y = %f\n", current_point.y);
+	max_vision.x = (vars->game->n_rows - 1) * BLOCK_SIZE;
+	max_vision.y = (vars->game->n_cols - 1) * BLOCK_SIZE;
+	if (current_point.y < 0 || current_point.y > max_vision.y
+		|| current_point.x < 0 || current_point.x > max_vision.x)
 		return (0);
 	return (1);
 }

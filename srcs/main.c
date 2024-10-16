@@ -6,18 +6,15 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:24:48 by pde-masc          #+#    #+#             */
-/*   Updated: 2024/10/10 16:59:32 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/16 18:29:37 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	init_player_for_test(t_player *player)
-{
-	player->pos_x *= 64;//the units have to be in pixels
-	player->pos_y *= 64;//
-	player->angle = 0;
-}
+//void	test_calculate_best_distance(t_vars *vars, double angle);
+void	test_fixing_errors(t_vars *vars);
+void	draw_every_ray(t_vars *vars);
 
 int	main(int argc, char **argv)
 {
@@ -34,16 +31,15 @@ int	main(int argc, char **argv)
 	vars.data.addr = mlx_get_data_addr(vars.data.img, &(vars.data.bpp),
 			&(vars.data.line_length), &(vars.data.endian));
 	
-	draw_game(vars, vars.game);
-	printf("position player in the map[%0.f][%0.f] = %c\n", \
-	vars.game->player->pos_x, vars.game->player->pos_y, \
-	vars.game->map[(int)vars.game->player->pos_x][(int)vars.game->player->pos_y]);
-	printf("\n");
-	init_player_for_test(vars.game->player);
 	printf("map has %i rows and %i columns\n", vars.game->n_rows, vars.game->n_cols);
-	vertical_point_crossing_wall(&vars);
-	printf("\n");
-	horizontal_point_crossing_wall(&vars);
+	printf("player position map[%f][%f]\n", vars.game->player->pos_x, vars.game->player->pos_y);
+	vars.game->player->pos_x *= BLOCK_SIZE;
+	vars.game->player->pos_y *= BLOCK_SIZE;
+	printf("angle_start = %f\n", vars.game->player->angle_start);
+	printf("angle_end = %f\n", vars.game->player->angle_end);
+	printf("middle angle = %f\n", vars.game->player->middle_angle);
+	printf("subsequent_angle = %f\n", vars.game->player->subsequent_angle);
+	draw_every_ray(&vars);
 
 	mlx_hook(vars.win_ptr, 2, 1L << 0, &on_keypress, &vars);
 	mlx_hook(vars.win_ptr, 17, 0, &on_destroy, &vars);

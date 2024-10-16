@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:00:14 by simarcha          #+#    #+#             */
-/*   Updated: 2024/10/10 12:33:25 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:41:26 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_block
 {
 	double	x;
 	double	y;
+	bool	reachable;
 }	t_block;
 
 //raycasting_utils.c
@@ -52,6 +53,12 @@ void		init_player_for_test(t_player *ray);
 
 //vertical_instersection.c
 t_block		vertical_point_crossing_wall(t_vars *vars);
+
+//t_block		calculate_best_distance(t_vars *vars, double angle);
+double		calculate_best_distance(t_vars *vars, double angle);
+void		draw_every_ray(t_vars *vars);
+//double		calculate_projected_wall_height(t_vars *vars, double distance_to_wall);
+
 
 
 #endif

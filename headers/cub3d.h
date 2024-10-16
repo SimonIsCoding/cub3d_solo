@@ -6,7 +6,7 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:18:15 by pde-masc          #+#    #+#             */
-/*   Updated: 2024/10/10 12:38:00 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:45:43 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/types.h>
+# include <stdbool.h>
 # include <sys/uio.h>
 # include <unistd.h>
 # include "../libft/libft.h"
@@ -41,9 +42,11 @@
 # define ESC 65307
 
 // Colors
-# define GREY	0x808080
-# define BLACK	0x000000
-# define WHITE	0xFFFFFF
+# define GREY			0x808080
+# define BLACK			0x000000
+# define WHITE			0xFFFFFF
+# define BLUE			0x0000FF
+# define ELECTRIC_BLUE	0x7df9ff
 
 //maths
 # define PI 	3.14159265358979323846
@@ -69,11 +72,12 @@ typedef struct raycasting
 {
 	double		pos_x;//player position in abscissa. The unit are the pixels!
 	double		pos_y;//player position in ordinate. The unit are the pixels!
+	double		middle_angle;
 	double		angle;//angle (in degrees) of our ray starting from the abscissa axis 0 ≤ angle ≤360
 	char		direction;//will determine our FOV
 	double		angle_start;
 	double		angle_end;
-	double		angle_subsequent_player;
+	double		subsequent_angle;
 	double		distance_to_wall;//the distance from the player to the wall
 }	t_player;
 
@@ -104,8 +108,7 @@ int	on_keypress(int keysym, t_vars *vars);
 //main.c
 void		my_mlx_pixel_put(t_vars vars, int x, int y, int color);
 void		draw_game(t_vars vars, t_game *game);
+void		draw_wall(t_vars *vars, double projected_wall_height, int *x, int *y);
 
-//parsing/convert_fd_into_array.c
-void		print_map_array(char **map);
 
 #endif
