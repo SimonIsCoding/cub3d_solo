@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   horizontal_intersection.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: simon <simon@student.42.fr>                +#+  +:+       +#+        */
+/*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:25:17 by simarcha          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/10/16 18:37:01 by simarcha         ###   ########.fr       */
-=======
-/*   Updated: 2024/10/09 10:14:40 by simon            ###   ########.fr       */
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +22,7 @@
 //This function gives us the coordinates of the character into block/cubs unit.
 //tan receives an angle in radian but we work in degrees, so we add * (PI / 180)
 //to convert it in radians
-<<<<<<< HEAD
 static t_block	horizontal_coordinate_first_block_point(t_player *player)
-=======
-static t_block	horizontal_coordinate_first_block_point(t_ray *ray)
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
 {
 	t_block	a;
 
@@ -39,28 +31,15 @@ static t_block	horizontal_coordinate_first_block_point(t_ray *ray)
 	if (ray_facing_up(player->angle) == 1)
 		a.y = rounded_down(player->pos_y / BLOCK_SIZE) * BLOCK_SIZE - 1;
 	else
-<<<<<<< HEAD
 		a.y = rounded_down(player->pos_y / BLOCK_SIZE) * BLOCK_SIZE + BLOCK_SIZE;
 	a.x = player->pos_x + (a.y - player->pos_y) / tan(player->angle * (PI / 180));
 	// a.x = player->pos_x - (a.y - player->pos_y) / tan(player->angle * (PI / 180));
-=======
-		a.y = rounded_down(ray->pos_y / BLOCK_SIZE) * BLOCK_SIZE + BLOCK_SIZE;
-	// printf("ray->pos_x = %f\nray->pos_y = %f\nray->angle = %f\n\n", 
-	// 		ray->pos_x, ray->pos_y, ray->angle);
-	a.x = ray->pos_x + (ray->pos_y - a.y) / tan(ray->angle * (PI / 180));
-
-	//printf("a.x = %f\na.y = %f\n", a.x, a.y);
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
 	return (a);
 }
 
 static double	find_horizontal_x_a(t_player *player)
 {
-<<<<<<< HEAD
 	return (rounded_down((double)BLOCK_SIZE / tan(player->angle * PI / 180)));
-=======
-	return (rounded_down((double)BLOCK_SIZE / tan(ray->angle * (PI / 180))));
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
 }
 
 static double	find_horizontal_y_a(t_player *player)
@@ -100,7 +79,6 @@ t_block	horizontal_point_crossing_wall(t_vars *vars)
 	t_block	current_in_px;
 	t_block	next_in_block;
 	t_block	next_in_px;
-<<<<<<< HEAD
 
 	if (vars->game->player->angle > 180 && vars->game->player->angle < 360)
 	 	vars->game->player->angle = 540 - vars->game->player->angle;
@@ -144,35 +122,10 @@ t_block	horizontal_point_crossing_wall(t_vars *vars)
 	// printf("horizontal final point in \033[1;34mblock\033[0m y = %0.f && x = %0.f\n", current_in_block.y, current_in_block.x);
 	vars->game->player->angle = vars->game->player->middle_angle;
 	return (current_in_px);
-=======
-	int	i = 0;
-
-	current_in_px = horizontal_coordinate_first_block_point(ray);//in pixel
-	current_in_block = convert_pixel_to_block(current_in_px);//in block/cub unit
-	printf("current point y = %f && x = %f\n", current_in_px.y, current_in_px.x);
-	printf("current point y = %f && x = %f\n", current_in_block.y, current_in_block.x);
-	current_in_block.x = rounded_nearest_nb(current_in_block.x);
-	current_in_block.y = rounded_nearest_nb(current_in_block.y);
-	while (map[(int)current_in_block.y][(int)current_in_block.x] == '0'
-			|| map[(int)current_in_block.y][(int)current_in_block.x] == 'N')
-	{
-		printf("i = %i\ncurrent point y = %f && x = %f: _%c_\n", i++, current_in_block.y, current_in_block.x, map[(int)current_in_block.y][(int)current_in_block.x]);
-		next_in_px = horizontal_coordinate_next_block_point(ray, current_in_px);
-		next_in_block = convert_pixel_to_block(next_in_px);
-		next_in_block.x = rounded_nearest_nb(next_in_block.x);
-		next_in_block.y = rounded_nearest_nb(next_in_block.y);
-		current_in_px = next_in_px;
-		current_in_block = next_in_block;
-	}
-	printf("final point y = %f && x = %f: _%c_\n", current_in_block.y, current_in_block.x, map[(int)current_in_block.y][(int)current_in_block.x]);
-	return (next_in_px);
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
 }
-//une fois que l'on a next_in_x, on peut calculer la distance en pixel parcourue
 
 /*void	test_fixing_errors(t_vars *vars)
 {
-<<<<<<< HEAD
 //1
 // 	t_block	horizontal_point_in_px;
 // 	t_block	vertical_point_in_px;
@@ -204,10 +157,3 @@ t_block	horizontal_point_crossing_wall(t_vars *vars)
 
 // printf("3 horizontal final point in \033[1;31mpixels\033[0m y = %f && x = %f\n", current_in_px.y, current_in_px.x);
 // printf("horizontal final point in \033[1;34mblock\033[0m y = %0.f && x = %0.f\n", current_in_block.y, current_in_block.x);
-=======
-	ray->pos_x = 1 * 64;// = 160 the units have to be in pixels
-	ray->pos_y = (8 * 64) + 10 * 64;// = 672
-	ray->angle = 45;
-}
-
->>>>>>> 4a62c2705dc1b070a0addd7994aa5507d6fe5411
