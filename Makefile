@@ -1,76 +1,119 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/11/13 16:39:49 by simarcha          #+#    #+#              #
+#    Updated: 2024/11/15 21:19:48 by simarcha         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-BROWN =     \033[38;2;184;143;29m
-ORANGE =    \033[38;5;209m
-BLUE =      \033[0;94m
-DEF_COLOR = \033[0;39m
-GREEN =     \033[0;92m
-GREY =      \033[38;5;245m
+#This Makefile works only on Linux. It won't work on MacOS nor Windows.
+#SETUP
+CC					= gcc
+CFLAGS				= -Wall -Werror -Wextra #-fsanitize=address
+NAME				= cub3d
+RM					= rm -rf
 
-UNAME = $(shell uname)
-NAME = cub3d
-CC = gcc
-CFLAGS = -Werror -Wextra -Wall -g3
+#FILES AND PATHS
+#HEADER
+INCLUDE_DIR			= headers/
+INCLUDE_FILES		= colors.h \
+					cub3d.h \
+					parsing.h \
+					raycasting.h \
+					textures.h
+INCLUDE				= $(addprefix $(INCLUDE_DIR), $(INCLUDE_FILES))
 
-ifeq ($(UNAME), Darwin)
-MLX_DIR = ./mlx_macOS
-MLX = $(MLX_DIR)/libmlx.a
-MLXFLAGS = -Lmlx -lmlx -lm -framework OpenGL -framework AppKit
-INCLUDES = -I./headers -Imlx
-else ifeq ($(UNAME), Linux)
-MLX_DIR = ./mlx
-MLX = $(MLX_DIR)/libmlx_Linux.a
-MLXFLAGS = -Lmlx -lmlx -lm -L/usr/lib/X11 -lXext -lX11
-INCLUDES = -I./headers -I./usr/include -Imlx
-endif
+#SRCS - Where the main files for this project are located
+SRCS_DIR			= srcs/
+SRCS_FILES			= main.c \
+					colors/colors.c \
+					controls/controls.c \
+					controls/movement_utils.c \
+					controls/movement.c \
+					controls/rotation.c \
+					minimap/minimap_utils.c \
+					minimap/minimap.c \
+					parsing/checking.c \
+					parsing/gnl2.c \
+					parsing/map_parsing_utils.c \
+					parsing/map_parsing.c \
+					parsing/parsing_utils.c \
+					parsing/parsing.c \
+					raycasting/calculate_best_distance.c \
+					raycasting/draw_textures.c \
+					raycasting/drawing_raycasting.c \
+					raycasting/horizontal_intersection.c \
+					raycasting/raycasting_utils.c \
+					raycasting/vertical_intersection.c \
+					raycasting/checking_calculating_next_point.c
 
-LIBFT_DIR = ./libft
-LIBFT = $(LIBFT_DIR)/libft.a
-LIBFT_HEADER = $(LIBFT_DIR)/libft.h
+SRCS				= $(addprefix $(SRCS_DIR), $(SRCS_FILES))
+OBJ_SRCS			= $(SRCS:.c=.o)
 
-HEADER = $(wildcard ./headers/*.h) $(LIBFT_HEADER)
+#MINILIB
+MINILIB_DIR			= mlx/
+MINILIB_ARCHIVE		= $(addprefix $(MINILIB_DIR), libmlx.a)
+MINILIB_FLAGS		= -Lmlx -lmlx -lm -L/usr/lib/X11 -lXext -lX11
 
-SRCS_DIR = srcs
-OBJS_DIR = objs/
+#LIBFT 
+LIBFT_DIR			= libft/
+LIBFT_ARCHIVE		= $(addprefix $(LIBFT_DIR), libft.a)
 
-SRCS = $(shell find $(SRCS_DIR) -name "*.c")
-OBJS = $(patsubst $(SRCS_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
+#RULES AND COMMANDS
+all:				$(LIBFT_ARCHIVE) $(MINILIB_ARCHIVE) $(NAME)
 
-all: $(NAME)
+%.o:				%.c Makefile $(INCLUDE)
+					@$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -I$(MINILIB_DIR) -c $< -o $@
 
-$(NAME): $(LIBFT) $(MLX) $(OBJS) $(HEADER)
-	@echo "$(BLUE)Linking executable...$(DEF_COLOR)"
-	@$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJS) $(MLXFLAGS) $(LIBFT)
-	@echo "$(GREEN)$(NAME) created$(DEF_COLOR)"
+$(NAME):			$(OBJ_SRCS) $(LIBFT_ARCHIVE) Makefile
+					@$(CC) $(CFLAGS) $(OBJ_SRCS) -L$(LIBFT_DIR) -lft $(MINILIB_FLAGS) $(MINILIB_ARCHIVE) -o $(NAME)
+					@echo "\033[1;32mReady to play!\033[0m"
 
-$(OBJS_DIR)%.o: $(SRCS_DIR)%.c $(HEADER) Makefile
-	@mkdir -p $(dir $@)
-	@echo "$(BROWN)Compiling   ${BLUE}→   $(ORANGE)$< $(DEF_COLOR)"
-	@$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
-$(OBJS_DIR):
-	@mkdir -p $@
+$(LIBFT_ARCHIVE):
+					@$(MAKE) -s -C $(LIBFT_DIR)
+#					@echo "Compiled $(LIBFT_ARCHIVE)."
 
-$(LIBFT): $(LIBFT_HEADER)
-	@echo "$(GREY)Compiling libft$(DEF_COLOR)"
-	@$(MAKE) -s -C $(LIBFT_DIR)
-
-$(MLX):
-	@echo "$(GREY)Compiling mlx$(DEF_COLOR)"
-	@$(MAKE) -s -C $(MLX_DIR)
-	@echo "$(GREEN)mlx compiled successfully$(DEF_COLOR)"
+$(MINILIB_ARCHIVE):
+					@$(MAKE) -s -C $(MINILIB_DIR)
+					@echo "\033[1;35mCompiled $(MINILIB_ARCHIVE).\033[0m"
+					@echo "\033[1;37mWait few seconds\033[0m"
 
 clean:
-	@$(MAKE) -s -C $(LIBFT_DIR) clean
-	@rm -rf $(MLX_DIR)/obj
-	@echo "$(BROWN)mlx: $(GREEN)removed objects!$(DEF_COLOR)"
-	@rm -rf $(OBJS_DIR)
-	@echo "$(GREEN)All objects removed$(DEF_COLOR)"
+					@echo "\033[1;31m\033[1mDeleting every object files\033[0m" 
+					@echo "\033[1mCleaning the object srcs files\033[0m"
+					$(RM) $(OBJ_SRCS)
+					@echo ""
+					@echo "\033[1mCleaning the object libft files\033[0m"
+					@$(MAKE) clean -C $(LIBFT_DIR)
+					@echo ""
+					@echo "\033[1mCleaning the mlx (aka minilibX) object and archive files\033[0m"
+					@$(MAKE) clean -C $(MINILIB_DIR)
 
-fclean: clean
-	@$(MAKE) -s -C $(MLX_DIR) clean
-	@rm -f $(LIBFT)
-	@rm -f $(NAME)
-	@echo "$(GREEN)All binaries removed$(DEF_COLOR)"
+fclean:				clean
+					@echo "\033[1;31m\033[1mDeleting the executable and archive files\033[0m" 
+					$(RM) $(NAME)
+					@echo ""
+					@echo "\033[1;31m\033[1mCleaning the libft object and archive files\033[0m"
+					$(MAKE) fclean -C $(LIBFT_DIR)
 
-re: fclean all
+re:					fclean all
 
-.PHONY: all clean fclean re
+.PHONY:				all clean fclean re
+
+#MINILIB
+# ifeq ($(UNAME), Darwin)
+# 	MINILIB_DIR = ./mlx_macOS
+# 	MINILIB_ARCHIVE = $(MINILIB_DIR)/libmlx.a
+# 	MINILIB_FLAGS = -Lmlx -lmlx -lm -framework OpenGL -framework AppKit
+# 	INCLUDES = -I./headers -Imlx
+# else ifeq ($(UNAME), Linux)
+# 	MINILIB_DIR = ./mlx
+# 	MINILIB_ARCHIVE = $(MINILIB_DIR)/libmlx_Linux.a
+# 	MINILIB_FLAGS = -Lmlx -lmlx -lm -L/usr/lib/X11 -lXext -lX11
+# 	INCLUDES = -I./headers -I./usr/include -Imlx
+# 	LINK_FLAGS = -ldl -lm -lpthread
+# endif

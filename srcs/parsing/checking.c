@@ -6,14 +6,18 @@
 /*   By: simarcha <simarcha@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 21:29:36 by pde-masc          #+#    #+#             */
-/*   Updated: 2024/10/08 17:18:09 by simarcha         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:18:57 by simarcha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-//This function returns 1 if we can read the file, 0 if we don't have the rights
-//to open it
+int	is_space(int c)
+{
+	return (c == '\t' || c == '\n' || c == ' '
+		|| c == '\f' || c == '\r' || c == '\v');
+}
+
 int	can_open(char *file)
 {
 	int	fd;
@@ -35,10 +39,14 @@ int	is_format(char *str, char *ext)
 	int	formatlen;
 	int	i;
 
+	if (!str || !ext)
+		return (0);
 	len = ft_strlen(str);
 	formatlen = ft_strlen(ext);
+	if (len == 0 || formatlen == 0 || formatlen > len)
+		return (0);
 	i = 1;
-	while (str[len - i] && ext[formatlen - i])
+	while (i <= formatlen && str[len - i] && ext[formatlen - i])
 	{
 		if (str[len - i] != ext[formatlen - i])
 			return (0);
@@ -79,20 +87,6 @@ void	check_id(t_game *game, char *str)
 }
 
 /*
-handle_error: frees game and displays an error message
-Set game to NULL if it has not been created yet.
-Set err to NULL if no message should be provided.
-*/
-void	handle_error(t_game *game, char *err)
-{
-	if (game)
-		destroy_game(game);
-	if (err)
-		write(STDERR_FILENO, err, ft_strlen(err));
-	exit(EXIT_FAILURE);
-}
-
-/*
 check_args: it does an input check for:
 - number of arguments
 - if the given map can be opened
@@ -102,8 +96,8 @@ void	check_args(int argc, char **argv)
 {
 	if (argc != 2)
 		handle_error(NULL, "Error\nToo few or too many arguments!\n");
-	else if (!can_open(argv[1]))
-		handle_error(NULL, "Error\nRead error!\n");
-	else if (!is_format(argv[1], MAP_EXTENSION))
+	if (!is_format(argv[1], MAP_EXTENSION))
 		handle_error(NULL, "Error\nMap has wrong extension!\n");
+	if (!can_open(argv[1]))
+		handle_error(NULL, "Error\nRead error!\n");
 }
